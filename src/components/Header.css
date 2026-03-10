@@ -1,0 +1,26 @@
+.header-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 10px;
+    background-color: transparent;
+    z-index: 1000;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0px; /* <--- Controls spacing between logo and text */
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+}
+
+.brand-name {
+    margin: 0;
+    font-size: 24px;
+    color: white;
+}
