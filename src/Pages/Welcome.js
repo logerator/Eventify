@@ -3,8 +3,13 @@ import React from 'react';
 
 function Welcome() {
 	return (
-		<div classname="welcome app-background">
-			<h1>Welcome!</h1>
+		<div className="welcome-container">
+			<div className="welcome-title">
+				<h1>Welcome To <br /> Eventify!</h1>
+			</div>
+			<div className="welcome-text">
+				<p>Discover and create amazing events with Eventify.</p>
+			</div>
 		</div>
 	);
 }

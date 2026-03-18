@@ -1,6 +1,6 @@
 function SignUp() {
 	return (
-		<div classname="sign-up ">
+		<div className="sign-up ">
 			<h1>Sign Up</h1>
 		</div>
 	);
