@@ -28,7 +28,7 @@
     color: white;
 }
 
-nav {
+.header-container nav {
     display: flex;
     gap: 20px;
     align-items: center;
