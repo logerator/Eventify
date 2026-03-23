@@ -25,11 +25,11 @@ export default function Header() {
 			<nav>
 				{isWelcomePage && (
 					<>
-						<Link to="/login">
-							<button className="login-btn">Login</button>
+						<Link to="/login" className="login-btn">
+							Login
 						</Link>
-						<Link to="/signup">
-							<button className="signup-btn">Sign Up</button>
+						<Link to="/signup" className="signup-btn">
+							Sign Up
 						</Link>
 					</>
 				)}
