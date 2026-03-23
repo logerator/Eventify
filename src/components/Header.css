@@ -3,15 +3,20 @@
     top: 0;
     left: 0;
     width: 100%;
-    padding: 10px 10px;
-    background-color: transparent;
+    padding: 0px 10px;
+    background-color: #2b71b1;
     z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .logo-wrapper {
     display: flex;
     align-items: center;
     gap: 0px; /* <--- Controls spacing between logo and text */
+    text-decoration: none; /* Remove underline from the link */
+    cursor: pointer; 
 }
 
 .logo-img {
@@ -23,4 +28,46 @@
     margin: 0;
     font-size: 24px;
     color: white;
+}
+
+.header-container nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-right: 25px;
+}
+
+.login-btn,
+.signup-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.login-btn {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+.login-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.signup-btn {
+    background-color: white;
+    color: #2b71b1;
+}
+
+.signup-btn:hover {
+    background-color: #f0f0f0;
+}
+
+header {
+    padding: 20px;
+    background-color: white;
+    border-bottom: 1px solid #ffffff;
 }

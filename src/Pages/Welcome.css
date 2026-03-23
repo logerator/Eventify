@@ -1,1 +1,37 @@
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - var(--header-height, 82px));
+    padding-top: 0;
+    overflow: hidden;
+}
 
+.welcome-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 0px;
+}
+
+    .welcome-title h1 {
+        margin: 0px;
+        line-height: 1.1;
+        text-align: center;
+    }
+
+.welcome-text {
+
+    font-size: 18px;
+    color: #ffffff;
+}
+
+    .welcome-text p {
+        margin: 30px;
+        text-align: center;
+    }
