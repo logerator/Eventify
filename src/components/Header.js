@@ -7,6 +7,7 @@ export default function Header() {
 	const isWelcomePage = location.pathname === "/";
 	const isLoginPage = location.pathname === "/login";
 	const isSignUpPage = location.pathname === "/signup";
+	const isEventsPage = location.pathname === "/events";
 
 	return (
 		<header className="header-container">
@@ -23,8 +24,11 @@ export default function Header() {
 			)}
 
 			<nav>
-				{isWelcomePage && (
+				{(isWelcomePage || isEventsPage) && (
 					<>
+						<Link to="/events" className="login-btn">
+							Events
+						</Link>
 						<Link to="/login" className="login-btn">
 							Login
 						</Link>
