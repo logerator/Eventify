@@ -15,6 +15,8 @@
     display: flex;
     align-items: center;
     gap: 0px; /* <--- Controls spacing between logo and text */
+    text-decoration: none; /* Remove underline from the link */
+    cursor: pointer; 
 }
 
 .logo-img {
@@ -28,10 +30,11 @@
     color: white;
 }
 
-nav {
+.header-container nav {
     display: flex;
     gap: 20px;
     align-items: center;
+    margin-right: 25px;
 }
 
 .login-btn,
@@ -42,6 +45,7 @@ nav {
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
+    text-decoration: none;
 }
 
 .login-btn {

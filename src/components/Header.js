@@ -5,22 +5,35 @@ export default function Header() {
 	const location = useLocation();
 
 	const isWelcomePage = location.pathname === "/";
+	const isLoginPage = location.pathname === "/login";
+	const isSignUpPage = location.pathname === "/signup";
+	const isEventsPage = location.pathname === "/events";
 
 	return (
 		<header className="header-container">
-			<div className="logo-wrapper">
-				<img src="/eventify-logo-clear.png" alt="Eventify Logo" className="logo-img" />
-				<h3 className="brand-name">Eventify</h3>
-			</div>
+			{(isLoginPage || isSignUpPage) ? (
+				<Link to="/" className="logo-wrapper">
+					<img src="/eventify-logo-clear.png" alt="Eventify Logo" className="logo-img" />
+					<h3 className="brand-name">Eventify</h3>
+				</Link>
+			) : (
+				<div to="/" className="logo-wrapper">
+					<img src="/eventify-logo-clear.png" alt="Eventify Logo" className="logo-img" />
+					<h3 className="brand-name">Eventify</h3>
+				</div>
+			)}
 
 			<nav>
-				{isWelcomePage && (
+				{(isWelcomePage || isEventsPage) && (
 					<>
-						<Link to="/login">
-							<button className="login-btn">Login</button>
+						<Link to="/events" className="login-btn">
+							Events
 						</Link>
-						<Link to="/signup">
-							<button className="signup-btn">Sign Up</button>
+						<Link to="/login" className="login-btn">
+							Login
+						</Link>
+						<Link to="/signup" className="signup-btn">
+							Sign Up
 						</Link>
 					</>
 				)}
