@@ -3,10 +3,9 @@ import './App.css';
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 import Header from './components/Header';
-import Login from './Pages/Login';
-import SignUp from './Pages/SignUp';
 import Welcome from './Pages/Welcome';
 import Events from './Pages/Events';
+import LoginOrSignUp from './Pages/LoginOrSignUp'
 
 const Layout = () => (
     <>
@@ -27,12 +26,8 @@ const router = createBrowserRouter([
               element: <Welcome />
           },
           {
-              path: "/login",
-              element: <Login />,
-          },
-          {
-              path: "/signup",
-              element: <SignUp />,
+              path: "/login_or_signup",
+              element: <LoginOrSignUp />,
           },
           {
               path: "/events",
