@@ -1,3 +1,11 @@
+/*
+ * Login and Sign-up Page Animation and Structure
+ * Original code and tutorial by: Code with Patel
+ * Video Title: Animated Login Page Using Html css & Javascript || Animated Registration Page
+ * URL: https://www.youtube.com/watch?v=wimb40eZdGs
+ * Accessed on: 3/29/2026
+ */
+
 import './LoginOrSignUp.css';
 import React, { useState } from 'react';
 
