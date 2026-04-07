@@ -9,8 +9,28 @@ function Events() {
 	const [myEvents, setMyEvents] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
+	const [search, setSearch] = useState('');
+	const [category, setCategory] = useState('all');
 
 	const myEventIds = useMemo(() => new Set(myEvents.map((e) => e.id)), [myEvents]);
+
+	const categories = useMemo(() => {
+		const allCategories = events.map((e) => (e.category || 'Other'));
+		return ['all', ...Array.from(new Set(allCategories)).sort()];
+	}, [events]);
+
+	const filteredEvents = useMemo(() => {
+		const query = search.trim().toLowerCase();
+		return events.filter((e) => {
+			const matchesCategory = category === 'all' || (e.category || 'Other') === category;
+			const matchesSearch =
+				!query ||
+				e.title.toLowerCase().includes(query) ||
+				e.location.toLowerCase().includes(query) ||
+				(e.category || 'Other').toLowerCase().includes(query);
+			return matchesCategory && matchesSearch;
+		});
+	}, [events, category, search]);
 
 	const load = async () => {
 		setLoading(true);
@@ -67,10 +87,35 @@ function Events() {
 	return (
 		<div className="events-page">
 			<div className="events-header">
-				<h1>Events</h1>
-				<button className="refresh-btn" onClick={load} disabled={loading}>
-					{loading ? 'Loading...' : 'Refresh'}
-				</button>
+				<div>
+					<h1>Events</h1>
+					<p className="events-subtitle">Search, filter, and save events that match your interests.</p>
+				</div>
+				<div className="events-actions">
+					<div className="search-group">
+						<input
+							className="search-input"
+							type="search"
+							value={search}
+							placeholder="Search events, locations, categories..."
+							onChange={(e) => setSearch(e.target.value)}
+						/>
+						<select
+							className="filter-select"
+							value={category}
+							onChange={(e) => setCategory(e.target.value)}
+						>
+							{categories.map((cat) => (
+								<option key={cat} value={cat}>
+									{cat === 'all' ? 'All categories' : cat}
+								</option>
+							))}
+						</select>
+					</div>
+					<button className="refresh-btn" onClick={load} disabled={loading}>
+						{loading ? 'Loading...' : 'Refresh'}
+					</button>
+				</div>
 			</div>
 
 			{health && (
@@ -84,11 +129,11 @@ function Events() {
 			<div className="events-grid">
 				<div className="events-panel">
 					<h2>All Events</h2>
-					{events.length === 0 ? (
-						<p className="muted">No events yet.</p>
+					{filteredEvents.length === 0 ? (
+						<p className="muted">No matching events found.</p>
 					) : (
 						<ul className="event-list">
-							{events.map((e) => (
+							{filteredEvents.map((e) => (
 								<li key={e.id} className="event-card">
 									<div className="event-main">
 										<div className="event-title">{e.title}</div>
@@ -107,7 +152,7 @@ function Events() {
 					)}
 				</div>
 
-				<div className="events-panel">
+				<div className="events-panel my-events-panel">
 					<h2>My Events</h2>
 					{myEvents.length === 0 ? (
 						<p className="muted">You haven't saved any events yet.</p>
@@ -119,6 +164,7 @@ function Events() {
 										<div className="event-title">{e.title}</div>
 										<div className="event-meta">{e.date} • {e.location} • {e.category}</div>
 									</div>
+									<button className="remove-btn">Remove</button>
 								</li>
 							))}
 						</ul>

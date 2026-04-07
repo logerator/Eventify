@@ -33,6 +33,34 @@ def create_app() -> Flask:
             "date": "2026-04-12",
             "category": "Music",
         },
+        {
+            "id": 4,
+            "title": "Art in the Park",
+            "location": "City Art Park",
+            "date": "2026-04-20",
+            "category": "Art",
+        },
+        {
+            "id": 5,
+            "title": "Tech Career Fair",
+            "location": "Convention Center",
+            "date": "2026-05-01",
+            "category": "Tech",
+        },
+        {
+            "id": 6,
+            "title": "Gourmet Food Truck Rally",
+            "location": "Main Street Plaza",
+            "date": "2026-05-10",
+            "category": "Food",
+        },
+        {
+            "id": 7,
+            "title": "Indie Music Festival",
+            "location": "Open Air Theater",
+            "date": "2026-05-15",
+            "category": "Music",
+        }
     ]
 
     MY_EVENTS: list[dict[str, Any]] = []
