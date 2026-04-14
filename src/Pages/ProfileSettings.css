@@ -1,0 +1,143 @@
+.profile-settings-page {
+	width: 80%;
+	margin: auto;
+	padding: 30px 24px;
+	color: #09121f;
+	min-height: 80%;
+	height: 100%;
+	box-shadow: none;
+	border: none;
+	backdrop-filter: none;
+	overflow: hidden;
+}
+
+.profile-settings-header {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 100px;
+	align-items: flex-start;
+	margin-bottom: 14px;
+	padding: 16px 20px;
+	padding-top: 20px;
+	border-radius: 20px;
+	background: rgba(255, 255, 255, 0.96);
+	border: 1px solid rgba(42, 92, 186, 0.14);
+	box-shadow: 0 18px 42px rgba(9, 18, 41, 0.08);
+}
+
+.profile-settings-header h1 {
+	margin: 0;
+	font-size: 1.8rem;
+}
+
+.profile-settings-subtitle {
+	margin: 4px 0 0;
+	color: #536477;
+	font-size: 0.85rem;
+	max-width: 560px;
+}
+
+.settings-container {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 12px;
+}
+
+.settings-panel {
+	border-radius: 16px;
+	padding: 16px;
+	background: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 25, 41, 0.1);
+	border: 1px solid rgba(214, 224, 241, 0.9);
+	transition: box-shadow 0.3s ease;
+	display: flex;
+	flex-direction: column;
+	min-height: 400px;
+}
+
+.settings-panel h2 {
+	margin: 0 0 8px 0;
+}
+
+.muted {
+	opacity: 0.75;
+	margin: 0;
+}
+
+.settings-form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.form-group label {
+	font-weight: 600;
+	font-size: 0.9rem;
+	color: #09121f;
+}
+
+.form-group input {
+	padding: 12px 14px;
+	border: 1px solid #d8e0ea;
+	border-radius: 10px;
+	font-size: 0.9rem;
+	background: #ffffff;
+	transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-group input:focus {
+	outline: none;
+	border-color: #7aa7ff;
+	box-shadow: 0 0 0 4px rgba(122, 167, 255, 0.16);
+}
+
+.error-messages {
+	padding: 12px 14px;
+	border: 1px solid #ffd7d7;
+	background: #fff4f4;
+	border-radius: 12px;
+	color: #8f1c1c;
+}
+
+.error-text {
+	margin: 4px 0;
+	font-size: 0.85rem;
+}
+
+.success-message {
+	padding: 12px 14px;
+	border: 1px solid #d8e8e1;
+	background: #f4fbf7;
+	border-radius: 12px;
+	color: #1a5c3a;
+}
+
+.success-message p {
+	margin: 0;
+	font-size: 0.85rem;
+}
+
+.save-settings-btn {
+	padding: 12px 18px;
+	border-radius: 10px;
+	border: none;
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+	background: linear-gradient(135deg, #4c7cf3 0%, #5ba0ff 100%);
+	color: #ffffff;
+	align-self: flex-start;
+}
+
+.save-settings-btn:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 8px 16px rgba(28, 66, 153, 0.22);
+}

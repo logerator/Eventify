@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Welcome from './Pages/Welcome';
 import Events from './Pages/Events';
 import LoginOrSignUp from './Pages/LoginOrSignUp'
+import ProfileSettings from './Pages/ProfileSettings';
 
 const Layout = () => (
     <>
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
           {
               path: "/events",
               element: <Events />,
+          },
+          {
+              path: "/profile_settings",
+              element: <ProfileSettings />,
           },
       ],
   },
