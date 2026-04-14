@@ -7,6 +7,7 @@ export default function Header() {
 	const isWelcomePage = location.pathname === "/";
 	const isLoginOrSignUpPage = location.pathname === "/login_or_signup";
 	const isEventsPage = location.pathname === "/events";
+	const isProfileSettingsPage = location.pathname === "/profile_settings";
 
 	return (
 		<header className="header-container">
@@ -18,11 +19,16 @@ export default function Header() {
 			<nav>
 				{(isWelcomePage || isEventsPage) && (
 					<>
-						<Link to="/events" className="login-btn">
+						<Link to="/events" className="events-btn">
 							Events
 						</Link>
+
 						<Link to="/login_or_signup" className="signup-btn">
 							Login/Sign Up
+						</Link>
+						
+						<Link to="/profile_settings" className="profile-settings-btn">
+							Profile Settings
 						</Link>
 					</>
 				)}

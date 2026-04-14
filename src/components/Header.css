@@ -37,8 +37,9 @@
     margin-right: 25px;
 }
 
-.login-btn,
-.signup-btn {
+.events-btn,
+.signup-btn,
+.profile-settings-btn{
     padding: 8px 20px;
     border: none;
     border-radius: 4px;
@@ -48,13 +49,13 @@
     text-decoration: none;
 }
 
-.login-btn {
+.events-btn {
     background-color: transparent;
     color: white;
     border: 1px solid white;
 }
 
-.login-btn:hover {
+.events-btn:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -65,6 +66,12 @@
 
 .signup-btn:hover {
     background-color: #f0f0f0;
+}
+
+.profile-settings-btn {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
 }
 
 header {
