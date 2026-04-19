@@ -16,13 +16,24 @@ function LoginOrSignUp() {
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [error, setError] = useState([]);
 
+	const [signupName, setSignupName] = useState('');
+	const [signupEmail, setSignupEmail] = useState('');
+	const [loginEmail, setLoginEmail] = useState('');
+	const [loginPassword, setLoginPassword] = useState('');
+	const [successMessage, setSuccessMessage] = useState('');
+
 	const toggleForm = () => {
 		setIsSignUp(!isSignUp);
 
 		//clears errors and previous input when switching forms
+		setSignupName('');
+		setSignupEmail('');
+		setLoginEmail('');
+		setLoginPassword('');
 		setPassword('');
 		setConfirmPassword('');
 		setError([]);
+		setSuccessMessage('');
 	};
 
 	//checks password against rules and returns an array of error messages if any rules are violated
@@ -42,8 +53,10 @@ function LoginOrSignUp() {
 		setError(validatePassword(newPassword));
 	};
 
-	const handleSignUpSubmit = (e) => {
+	const handleSignUpSubmit = async (e) => {
 		e.preventDefault();
+		setError([]);
+		setSuccessMessage('');
 
 		const validationErrors = validatePassword(password);
 		if (validationErrors.length > 0) {
@@ -56,14 +69,75 @@ function LoginOrSignUp() {
 			return;
 		}
 
-		//Submit form logic here
-		console.log("Sign up form submitted successfully!");
+		try {
+			const res = await fetch("http://localhost:5000/api/auth/signup", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					name: signupName,
+					email: signupEmail,
+					password
+				})
+			});
+
+			const data = await res.json();
+
+			if (!res.ok) {
+				setError([data.message || "Signup failed."]);
+				return;
+			}
+
+			setSuccessMessage("Account created successfully. Please sign in.");
+			setSignupName('');
+			setSignupEmail('');
+			setPassword('');
+			setConfirmPassword('');
+			setIsSignUp(false);
+		} catch (err) {
+			console.error(err);
+			setError(["Could not connect to the server."]);
+		}
 	};
 
-	const handleLoginSubmit = (e) => {
+	const handleLoginSubmit = async (e) => {
 		e.preventDefault();
-		//Login form logic here
-		console.log("Login form submitted successfully!");
+		setError([]);
+		setSuccessMessage('');
+
+		try {
+			const res = await fetch("http://localhost:5000/api/auth/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					email: loginEmail,
+					password: loginPassword
+				})
+			});
+
+			const data = await res.json();
+
+			if (!res.ok) {
+				setError([data.message || "Login failed."]);
+				return;
+			}
+
+			localStorage.setItem("token", data.token);
+			localStorage.setItem("user", JSON.stringify(data.user));
+			
+			//Send user to events page after successful login
+			window.location.href = "/events";
+
+			setSuccessMessage(`Welcome back, ${data.user.name}!`);
+			setLoginEmail('');
+			setLoginPassword('');
+		} catch (err) {
+			console.error(err);
+			setError(["Could not connect to the server."]);
+		}
 	};
 
 	return (
@@ -72,8 +146,20 @@ function LoginOrSignUp() {
 				<form onSubmit={handleSignUpSubmit}>
 					<h1>Create Account</h1>
 					<span>Register with E-mail</span>
-					<input type="text" placeholder="Name" required />
-					<input type="email" placeholder="E-mail" required />
+					<input
+						type="text"
+						placeholder="Name"
+						required
+						value={signupName}
+						onChange={(e) => setSignupName(e.target.value)}
+					/>
+					<input
+						type="email"
+						placeholder="E-mail"
+						required
+						value={signupEmail}
+						onChange={(e) => setSignupEmail(e.target.value)}
+					/>
 					<input 
 						type="password" 
 						placeholder="Password" 
@@ -96,6 +182,12 @@ function LoginOrSignUp() {
 							))}
 						</div>
 					)}
+
+					{successMessage && (
+						<div className="success-messages">
+							<p>{successMessage}</p>
+						</div>
+					)}
 					
 					<button type="submit">Sign Up</button>
 				</form>
@@ -105,8 +197,20 @@ function LoginOrSignUp() {
 				<form onSubmit={handleLoginSubmit}>
 					<h1>Login</h1>
 					<span>Login With Email & Password</span>
-					<input type="email" placeholder="E-mail" required />
-					<input type="password" placeholder="Password" required />
+					<input
+						type="email"
+						placeholder="E-mail"
+						required
+						value={loginEmail}
+						onChange={(e) => setLoginEmail(e.target.value)}
+					/>
+					<input
+						type="password"
+						placeholder="Password"
+						required
+						value={loginPassword}
+						onChange={(e) => setLoginPassword(e.target.value)}
+					/>
 					<a href="#">Forgot Password?</a>
 					<button type="submit">Sign In</button>
 				</form>

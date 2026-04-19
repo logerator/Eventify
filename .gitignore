@@ -23,3 +23,8 @@ yarn-debug.log*
 yarn-error.log*
 
 .vs/
+
+# backend
+node_modules/
+backend/node_modules/
+backend/.env
