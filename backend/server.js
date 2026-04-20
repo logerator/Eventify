@@ -87,6 +87,44 @@ function pick(arr, idx) {
   return arr[idx % arr.length];
 }
 
+async function autoSeedUsersIfNeeded() {
+  const demoUserEmail = process.env.DEMO_USER_EMAIL || "demo@eventify.app";
+  const demoUserPassword = process.env.DEMO_USER_PASSWORD || "Demo1234!";
+  const demoAdminEmail = process.env.DEMO_ADMIN_EMAIL || "admin@eventify.app";
+  const demoAdminPassword = process.env.DEMO_ADMIN_PASSWORD || "Admin1234!";
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+
+    const existingUser = await conn.query("SELECT id FROM users WHERE email = ?", [demoUserEmail]);
+    if (existingUser.length === 0) {
+      const hash = await argon2.hash(demoUserPassword);
+      await conn.query(
+        "INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, 0)",
+        ["Demo User", demoUserEmail, hash]
+      );
+      console.log(`Demo user created: ${demoUserEmail}`);
+    }
+
+    const existingAdmin = await conn.query("SELECT id FROM users WHERE email = ?", [demoAdminEmail]);
+    if (existingAdmin.length === 0) {
+      const hash = await argon2.hash(demoAdminPassword);
+      await conn.query(
+        "INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, 1)",
+        ["Demo Admin", demoAdminEmail, hash]
+      );
+      console.log(`Demo admin created: ${demoAdminEmail}`);
+    } else {
+      await conn.query("UPDATE users SET is_admin = 1 WHERE email = ?", [demoAdminEmail]);
+    }
+  } catch (err) {
+    console.error("Auto-seed users error:", err);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
 async function autoSeedEventsIfNeeded() {
   const targetCount = 100;
 
@@ -152,6 +190,7 @@ async function autoSeedEventsIfNeeded() {
   });
 
   await ensureSchema();
+  await autoSeedUsersIfNeeded();
   await autoSeedEventsIfNeeded();
 
 app.get("/api/health", (req, res) => {
