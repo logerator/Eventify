@@ -7,6 +7,7 @@ import Welcome from './Pages/Welcome';
 import Events from './Pages/Events';
 import LoginOrSignUp from './Pages/LoginOrSignUp'
 import ProfileSettings from './Pages/ProfileSettings';
+import AdminEvents from './Pages/AdminEvents';
 
 const Layout = () => (
     <>
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
           {
               path: "/profile_settings",
               element: <ProfileSettings />,
+          },
+          {
+              path: "/admin_events",
+              element: <AdminEvents />,
           },
       ],
   },

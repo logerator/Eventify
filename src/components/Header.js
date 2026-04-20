@@ -1,13 +1,34 @@
-import './Header.css';
-import { Link, useLocation } from 'react-router-dom';
+﻿import './Header.css';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function Header() {
 	const location = useLocation();
+	const navigate = useNavigate();
+	const [user, setUser] = useState(null);
+	const [dropdownOpen, setDropdownOpen] = useState(false);
 
 	const isWelcomePage = location.pathname === "/";
 	const isLoginOrSignUpPage = location.pathname === "/login_or_signup";
 	const isEventsPage = location.pathname === "/events";
 	const isProfileSettingsPage = location.pathname === "/profile_settings";
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("user");
+		if (storedUser) {
+			setUser(JSON.parse(storedUser));
+		} else {
+			setUser(null);
+		}
+	}, [location.pathname]);
+
+	const handleLogout = () => {
+		localStorage.removeItem("token");
+		localStorage.removeItem("user");
+		setUser(null);
+		setDropdownOpen(false);
+		navigate("/");
+	};
 
 	return (
 		<header className="header-container">
@@ -17,7 +38,7 @@ export default function Header() {
 			</Link>
 
 			<nav>
-				{(isWelcomePage || isEventsPage) && (
+				{!user && (
 					<>
 						<Link to="/events" className="events-btn">
 							Events
@@ -26,10 +47,41 @@ export default function Header() {
 						<Link to="/login_or_signup" className="signup-btn">
 							Login/Sign Up
 						</Link>
-						
-						<Link to="/profile_settings" className="profile-settings-btn">
-							Profile Settings
+					</>
+				)}
+
+				{user && (
+					<>
+						<Link to="/events" className="events-btn">
+							Events
 						</Link>
+
+						<div className="dropdown">
+							<button 
+								className="profile-link"
+								onClick={() => setDropdownOpen(!dropdownOpen)}
+							>
+								Hello, {user.name}! ▾
+							</button>
+							
+							{dropdownOpen && (
+								<div className="dropdown-menu">
+									<Link 
+										to="/profile_settings" 
+										className="dropdown-item"
+										onClick={() => setDropdownOpen(false)}
+									>
+										Profile Settings
+									</Link>
+									<button 
+										className="dropdown-item logout-btn"
+										onClick={handleLogout}
+									>
+										Logout
+									</button>
+								</div>
+							)}
+						</div>
 					</>
 				)}
 			</nav>
