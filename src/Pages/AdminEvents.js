@@ -1,7 +1,7 @@
 import './AdminEvents.css';
 import { useEffect, useState } from 'react';
 
-const API_BASE_URL = 'http://127.0.0.1:5050';
+const API_BASE_URL = 'https://eventify-production-9f2a.up.railway.app';
 
 export default function AdminEvents() {
 	const [events, setEvents] = useState([]);

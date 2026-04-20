@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 
-const API_BASE_URL = 'http://127.0.0.1:5050';
+const API_BASE_URL = 'https://eventify-production-9f2a.up.railway.app';
 
 function Events() {
 	const [health, setHealth] = useState(null);
