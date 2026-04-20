@@ -191,8 +191,18 @@
 	border: 1px solid #e6ecf2;
 }
 
+.event-image {
+	width: 120px;
+	height: 72px;
+	object-fit: cover;
+	border-radius: 12px;
+	flex-shrink: 0;
+	border: 1px solid rgba(214, 224, 241, 0.9);
+}
+
 .event-main {
 	min-width: 0;
+	flex: 1;
 }
 
 .event-title {

@@ -1,5 +1,5 @@
 import './ProfileSettings.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 
@@ -10,6 +10,19 @@ function ProfileSettings() {
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [error, setError] = useState([]);
 	const { toasts, addToast } = useToast();
+	const token = localStorage.getItem('token');
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem('user');
+		if (storedUser) {
+			try {
+				const u = JSON.parse(storedUser);
+				if (u && u.name) setUsername(u.name);
+			} catch {
+				// ignore
+			}
+		}
+	}, []);
 
 	const validatePassword = (pass) => {
 		const rules = [];
@@ -21,9 +34,13 @@ function ProfileSettings() {
 		return rules;
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setError([]);
+		if (!token) {
+			addToast('Please log in to update your profile.', 'error');
+			return;
+		}
 
 		if (newPassword) {
 			const validationErrors = validatePassword(newPassword);
@@ -38,8 +55,36 @@ function ProfileSettings() {
 			}
 		}
 
-		console.log("Profile updated successfully!");
-		addToast("Profile updated successfully!", 'success');
+		try {
+			const payload = {
+				name: username,
+				currentPassword: currentPassword || undefined,
+				newPassword: newPassword || undefined,
+			};
+			const res = await fetch('http://localhost:5050/api/user/me', {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(payload),
+			});
+			const data = await res.json().catch(() => ({}));
+			if (!res.ok) {
+				addToast(data.message || 'Failed to update profile.', 'error');
+				return;
+			}
+			if (data.user) {
+				localStorage.setItem('user', JSON.stringify(data.user));
+			}
+			setCurrentPassword('');
+			setNewPassword('');
+			setConfirmPassword('');
+			addToast('Profile updated successfully!', 'success');
+		} catch (err) {
+			console.error(err);
+			addToast('Could not connect to the server.', 'error');
+		}
 	};
 
 	return (

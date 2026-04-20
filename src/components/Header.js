@@ -66,6 +66,15 @@ export default function Header() {
 							
 							{dropdownOpen && (
 								<div className="dropdown-menu">
+									{user?.is_admin && (
+										<Link 
+											to="/admin_events" 
+											className="dropdown-item"
+											onClick={() => setDropdownOpen(false)}
+										>
+											Admin Events
+										</Link>
+									)}
 									<Link 
 										to="/profile_settings" 
 										className="dropdown-item"
