@@ -87,6 +87,57 @@ function pick(arr, idx) {
   return arr[idx % arr.length];
 }
 
+async function autoSeedEventsIfNeeded() {
+  const targetCount = 100;
+
+  const categories = ["Tech", "Music", "Food", "Sports", "Art", "Networking", "Gaming", "Health"];
+  const locations = ["Downtown", "Student Center", "City Park", "Library", "Convention Hall", "Waterfront", "Museum", "Theatre"];
+  const colors = ["#2563eb", "#7c3aed", "#db2777", "#16a34a", "#ea580c", "#0891b2", "#b91c1c", "#0f766e"];
+  const titles = [
+    "Community Meetup",
+    "Workshop",
+    "Live Showcase",
+    "Beginner Class",
+    "Open Mic",
+    "Festival",
+    "Career Night",
+    "Local Tournament"
+  ];
+
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const current = await conn.query("SELECT COUNT(*) AS c FROM events");
+    const currentCount = Number(current[0]?.c || 0);
+
+    if (currentCount >= targetCount) return;
+
+    const toInsert = targetCount - currentCount;
+    const rows = [];
+    for (let i = 0; i < toInsert; i++) {
+      const idx = currentCount + i + 1;
+      const category = pick(categories, idx);
+      const location = pick(locations, idx);
+      const themeColor = pick(colors, idx);
+      const title = `${pick(titles, idx)}: ${category}`;
+      const date = new Date(Date.now() + idx * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      const imageUrl = `https://picsum.photos/seed/eventify-${idx}/640/360`;
+      const description = `Join us for ${title} in ${location}.`;
+      rows.push([title, date, location, category, imageUrl, themeColor, description]);
+    }
+
+    await conn.batch(
+      "INSERT INTO events (title, date, location, category, image_url, theme_color, description) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      rows
+    );
+    console.log(`Auto-seeded ${toInsert} demo events (total now ${targetCount}).`);
+  } catch (err) {
+    console.error("Auto-seed events error:", err);
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
 (async () => {
   const mariadbModule = await import("mariadb");
   const mariadb = mariadbModule.default ?? mariadbModule;
@@ -101,6 +152,7 @@ function pick(arr, idx) {
   });
 
   await ensureSchema();
+  await autoSeedEventsIfNeeded();
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", time: new Date().toISOString() });
