@@ -8,6 +8,8 @@
 
 import './LoginOrSignUp.css';
 import React, { useState } from 'react';
+import Toast from '../components/Toast';
+import { useToast } from '../hooks/useToast';
 
 function LoginOrSignUp() {
 	const [isSignUp, setIsSignUp] = useState(false);
@@ -20,7 +22,8 @@ function LoginOrSignUp() {
 	const [signupEmail, setSignupEmail] = useState('');
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
-	const [successMessage, setSuccessMessage] = useState('');
+
+	const { toasts, addToast } = useToast();
 
 	const toggleForm = () => {
 		setIsSignUp(!isSignUp);
@@ -33,7 +36,6 @@ function LoginOrSignUp() {
 		setPassword('');
 		setConfirmPassword('');
 		setError([]);
-		setSuccessMessage('');
 	};
 
 	//checks password against rules and returns an array of error messages if any rules are violated
@@ -56,7 +58,6 @@ function LoginOrSignUp() {
 	const handleSignUpSubmit = async (e) => {
 		e.preventDefault();
 		setError([]);
-		setSuccessMessage('');
 
 		const validationErrors = validatePassword(password);
 		if (validationErrors.length > 0) {
@@ -85,11 +86,11 @@ function LoginOrSignUp() {
 			const data = await res.json();
 
 			if (!res.ok) {
-				setError([data.message || "Signup failed."]);
+				addToast(data.message || "Signup failed.", 'error');
 				return;
 			}
 
-			setSuccessMessage("Account created successfully. Please sign in.");
+			addToast("Account created! Please sign in.", 'success');
 			setSignupName('');
 			setSignupEmail('');
 			setPassword('');
@@ -97,14 +98,12 @@ function LoginOrSignUp() {
 			setIsSignUp(false);
 		} catch (err) {
 			console.error(err);
-			setError(["Could not connect to the server."]);
+			addToast("Could not connect to the server.", 'error');
 		}
 	};
 
 	const handleLoginSubmit = async (e) => {
 		e.preventDefault();
-		setError([]);
-		setSuccessMessage('');
 
 		try {
 			const res = await fetch("http://localhost:5000/api/auth/login", {
@@ -121,119 +120,111 @@ function LoginOrSignUp() {
 			const data = await res.json();
 
 			if (!res.ok) {
-				setError([data.message || "Login failed."]);
+				addToast(data.message || "Login failed.", 'error');
 				return;
 			}
 
 			localStorage.setItem("token", data.token);
 			localStorage.setItem("user", JSON.stringify(data.user));
-			
+
 			//Send user to events page after successful login
 			window.location.href = "/events";
-
-			setSuccessMessage(`Welcome back, ${data.user.name}!`);
-			setLoginEmail('');
-			setLoginPassword('');
 		} catch (err) {
 			console.error(err);
-			setError(["Could not connect to the server."]);
+			addToast("Could not connect to the server.", 'error');
 		}
 	};
 
 	return (
-		<div className={`container ${isSignUp ? "active" : ""}`}>
-			<div className="form-container sign-up">
-				<form onSubmit={handleSignUpSubmit}>
-					<h1>Create Account</h1>
-					<span>Register with E-mail</span>
-					<input
-						type="text"
-						placeholder="Name"
-						required
-						value={signupName}
-						onChange={(e) => setSignupName(e.target.value)}
-					/>
-					<input
-						type="email"
-						placeholder="E-mail"
-						required
-						value={signupEmail}
-						onChange={(e) => setSignupEmail(e.target.value)}
-					/>
-					<input 
-						type="password" 
-						placeholder="Password" 
-						required
-						value={password}
-						onChange={handlePasswordChange}
-					/>
-					<input 
-						type="password" 
-						placeholder="Confirm Password" 
-						required
-						value={confirmPassword}
-						onChange={(e) => setConfirmPassword(e.target.value)}
-					/>
-					
-					{error.length > 0 && (
-						<div className="error-messages">
-							{error.map((err, index) => (
-								<p key={index} className="error-text">{err}</p>
-							))}
+		<>
+			<div className={`container ${isSignUp ? "active" : ""}`}>
+				<div className="form-container sign-up">
+					<form onSubmit={handleSignUpSubmit}>
+						<h1>Create Account</h1>
+						<span>Register with E-mail</span>
+						<input
+							type="text"
+							placeholder="Name"
+							required
+							value={signupName}
+							onChange={(e) => setSignupName(e.target.value)}
+						/>
+						<input
+							type="email"
+							placeholder="E-mail"
+							required
+							value={signupEmail}
+							onChange={(e) => setSignupEmail(e.target.value)}
+						/>
+						<input
+							type="password"
+							placeholder="Password"
+							required
+							value={password}
+							onChange={handlePasswordChange}
+						/>
+						<input
+							type="password"
+							placeholder="Confirm Password"
+							required
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+						/>
+
+						{error.length > 0 && (
+							<div className="error-messages">
+								{error.map((err, index) => (
+									<p key={index} className="error-text">{err}</p>
+								))}
+							</div>
+						)}
+
+						<button type="submit">Sign Up</button>
+					</form>
+				</div>
+
+				<div className="form-container login">
+					<form onSubmit={handleLoginSubmit}>
+						<h1>Login</h1>
+						<span>Login With Email & Password</span>
+						<input
+							type="email"
+							placeholder="E-mail"
+							required
+							value={loginEmail}
+							onChange={(e) => setLoginEmail(e.target.value)}
+						/>
+						<input
+							type="password"
+							placeholder="Password"
+							required
+							value={loginPassword}
+							onChange={(e) => setLoginPassword(e.target.value)}
+						/>
+						<a href="#">Forgot Password?</a>
+						<button type="submit">Sign In</button>
+					</form>
+				</div>
+
+				<div className="toggle-container">
+					<div className="toggle">
+						<div className="toggle-panel toggle-left">
+							<h1>Welcome Back To <br /> Eventify!</h1>
+							<p>Login With Email & Password</p>
+							<button className="hidden" type="button" onClick={toggleForm}>Sign In</button>
 						</div>
-					)}
 
-					{successMessage && (
-						<div className="success-messages">
-							<p>{successMessage}</p>
+						<div className="toggle-panel toggle-right">
+							<h1>Welcome To <br /> Eventify!</h1>
+							<p>Create An Account And Start Discovering!</p>
+							<button className="hidden" type="button" onClick={toggleForm}>Sign Up</button>
 						</div>
-					)}
-					
-					<button type="submit">Sign Up</button>
-				</form>
-			</div>
-
-			<div className="form-container login">
-				<form onSubmit={handleLoginSubmit}>
-					<h1>Login</h1>
-					<span>Login With Email & Password</span>
-					<input
-						type="email"
-						placeholder="E-mail"
-						required
-						value={loginEmail}
-						onChange={(e) => setLoginEmail(e.target.value)}
-					/>
-					<input
-						type="password"
-						placeholder="Password"
-						required
-						value={loginPassword}
-						onChange={(e) => setLoginPassword(e.target.value)}
-					/>
-					<a href="#">Forgot Password?</a>
-					<button type="submit">Sign In</button>
-				</form>
-			</div>
-
-			<div className="toggle-container">
-				<div className="toggle">
-					<div className="toggle-panel toggle-left">
-						<h1>Welcome Back To <br /> Eventify!</h1>
-						<p>Login With Email & Password</p>
-						<button className="hidden" type="button" onClick={toggleForm}>Sign In</button>
-					</div>
-
-					<div className="toggle-panel toggle-right">
-						<h1>Welcome To <br /> Eventify!</h1>
-						<p>Create An Account And Start Discovering!</p>
-						<button className="hidden" type="button" onClick={toggleForm}>Sign Up</button>
 					</div>
 				</div>
 			</div>
 
-		</div>
-
+			<Toast toasts={toasts} />
+		</>
 	);
 }
 

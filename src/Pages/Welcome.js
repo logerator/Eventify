@@ -1,5 +1,4 @@
 import './Welcome.css';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 function Welcome() {
@@ -10,9 +9,9 @@ function Welcome() {
 			description: 'Browse and find amazing events happening near you'
 		},
 		{
-			icon: '✏️',
-			title: 'Create Events',
-			description: 'Share and organize your own events with ease'
+			icon: '🔖',
+			title: 'Save Events',
+			description: 'Bookmark events you love and keep track of what\'s coming up'
 		},
 		{
 			icon: '👥',
