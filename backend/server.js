@@ -43,6 +43,18 @@ async function ensureSchema() {
   let conn;
   try {
     conn = await pool.getConnection();
+
+    await conn.query(
+      "CREATE TABLE IF NOT EXISTS users (" +
+        "id INT AUTO_INCREMENT PRIMARY KEY," +
+        "name VARCHAR(255) NOT NULL," +
+        "email VARCHAR(255) NOT NULL UNIQUE," +
+        "password_hash TEXT NOT NULL," +
+        "is_admin TINYINT(1) NOT NULL DEFAULT 0," +
+        "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+      ")"
+    );
+
     const cols = await conn.query(
       "SELECT COUNT(*) AS c FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'is_admin'"
     );
