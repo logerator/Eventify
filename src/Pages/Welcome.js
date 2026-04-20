@@ -6,17 +6,20 @@ function Welcome() {
 		{
 			icon: '🔍',
 			title: 'Discover Events',
-			description: 'Browse and find amazing events happening near you'
+			description: 'Browse and find amazing events happening near you',
+			to: '/events'
 		},
 		{
 			icon: '🔖',
 			title: 'Save Events',
-			description: 'Bookmark events you love and keep track of what\'s coming up'
+			description: 'Bookmark events you love and keep track of what\'s coming up',
+			to: '/events#my-events'
 		},
 		{
 			icon: '👥',
 			title: 'Connect',
-			description: 'Meet people and build communities around shared interests'
+			description: 'Meet people and build communities around shared interests',
+			to: '/connect'
 		}
 	];
 
@@ -34,11 +37,11 @@ function Welcome() {
 				<div className="features-section">
 					<div className="features-grid">
 						{features.map((feature, index) => (
-							<div key={index} className="feature-card">
+							<Link key={index} to={feature.to} className="feature-card feature-card-link">
 								<div className="feature-icon">{feature.icon}</div>
 								<h3>{feature.title}</h3>
 								<p>{feature.description}</p>
-							</div>
+							</Link>
 						))}
 					</div>
 				</div>

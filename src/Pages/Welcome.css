@@ -131,7 +131,11 @@
     padding: 30px 20px;
     text-align: center;
     transition: all 0.3s ease;
-    cursor: default;
+    cursor: pointer;
+}
+
+.feature-card-link {
+    text-decoration: none;
 }
 
 .feature-card:hover {

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 
-const API_BASE_URL = 'http://127.0.0.1:5000';
+const API_BASE_URL = 'http://127.0.0.1:5050';
 
 function Events() {
 	const [health, setHealth] = useState(null);
@@ -13,6 +13,7 @@ function Events() {
 	const [search, setSearch] = useState('');
 	const [category, setCategory] = useState('all');
 	const { toasts, addToast } = useToast();
+	const token = localStorage.getItem('token');
 
 	const myEventIds = useMemo(() => new Set(myEvents.map((e) => e.id)), [myEvents]);
 
@@ -37,23 +38,35 @@ function Events() {
 	const load = async () => {
 		setLoading(true);
 		try {
-			const [healthRes, eventsRes, myEventsRes] = await Promise.all([
+			const [healthRes, eventsRes] = await Promise.all([
 				fetch(`${API_BASE_URL}/api/health`),
 				fetch(`${API_BASE_URL}/api/events`),
-				fetch(`${API_BASE_URL}/api/my-events`),
 			]);
 
 			if (!healthRes.ok) throw new Error('Health check failed');
 			if (!eventsRes.ok) throw new Error('Failed to load events');
-			if (!myEventsRes.ok) throw new Error('Failed to load My Events');
 
 			const healthJson = await healthRes.json();
 			const eventsJson = await eventsRes.json();
-			const myEventsJson = await myEventsRes.json();
 
 			setHealth(healthJson);
 			setEvents(Array.isArray(eventsJson.events) ? eventsJson.events : []);
-			setMyEvents(Array.isArray(myEventsJson.events) ? myEventsJson.events : []);
+
+			if (token) {
+				const myEventsRes = await fetch(`${API_BASE_URL}/api/my-events`, {
+					headers: { Authorization: `Bearer ${token}` },
+				});
+				if (myEventsRes.ok) {
+					const myEventsJson = await myEventsRes.json();
+					setMyEvents(Array.isArray(myEventsJson.events) ? myEventsJson.events : []);
+				} else if (myEventsRes.status === 401) {
+					setMyEvents([]);
+				} else {
+					throw new Error('Failed to load My Events');
+				}
+			} else {
+				setMyEvents([]);
+			}
 		} catch (e) {
 			addToast(e instanceof Error ? e.message : 'Unknown error', 'error');
 		} finally {
@@ -66,10 +79,14 @@ function Events() {
 	}, []);
 
 	const saveEvent = async (eventId) => {
+		if (!token) {
+			addToast('Please log in to save events.', 'error');
+			return;
+		}
 		try {
 			const res = await fetch(`${API_BASE_URL}/api/my-events`, {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
 				body: JSON.stringify({ eventId }),
 			});
 
@@ -79,6 +96,24 @@ function Events() {
 			}
 
 			addToast('Event saved!', 'success');
+			await load();
+		} catch (e) {
+			addToast(e instanceof Error ? e.message : 'Unknown error', 'error');
+		}
+	};
+
+	const removeEvent = async (eventId) => {
+		if (!token) return;
+		try {
+			const res = await fetch(`${API_BASE_URL}/api/my-events/${eventId}`, {
+				method: 'DELETE',
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			if (!res.ok) {
+				const json = await res.json().catch(() => ({}));
+				throw new Error(json.error || 'Failed to remove event');
+			}
+			addToast('Removed from My Events.', 'success');
 			await load();
 		} catch (e) {
 			addToast(e instanceof Error ? e.message : 'Unknown error', 'error');
@@ -133,7 +168,10 @@ function Events() {
 					) : (
 						<ul className="event-list">
 							{filteredEvents.map((e) => (
-								<li key={e.id} className="event-card">
+								<li key={e.id} className="event-card" style={e.themeColor ? { borderLeft: `6px solid ${e.themeColor}` } : undefined}>
+									{e.imageUrl && (
+										<img className="event-image" src={e.imageUrl} alt={e.title} />
+									)}
 									<div className="event-main">
 										<div className="event-title">{e.title}</div>
 										<div className="event-meta">{e.date} • {e.location} • {e.category}</div>
@@ -151,19 +189,24 @@ function Events() {
 					)}
 				</div>
 
-				<div className="events-panel my-events-panel">
+				<div className="events-panel my-events-panel" id="my-events">
 					<h2>My Events</h2>
-					{myEvents.length === 0 ? (
+					{!token ? (
+						<p className="muted">Log in to save events to your account.</p>
+					) : myEvents.length === 0 ? (
 						<p className="muted">You haven't saved any events yet.</p>
 					) : (
 						<ul className="event-list">
 							{myEvents.map((e) => (
-								<li key={e.id} className="event-card">
+								<li key={e.id} className="event-card" style={e.themeColor ? { borderLeft: `6px solid ${e.themeColor}` } : undefined}>
+									{e.imageUrl && (
+										<img className="event-image" src={e.imageUrl} alt={e.title} />
+									)}
 									<div className="event-main">
 										<div className="event-title">{e.title}</div>
 										<div className="event-meta">{e.date} • {e.location} • {e.category}</div>
 									</div>
-									<button className="remove-btn">Remove</button>
+									<button className="remove-btn" onClick={() => removeEvent(e.id)}>Remove</button>
 								</li>
 							))}
 						</ul>

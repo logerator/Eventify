@@ -1,7 +1,7 @@
 import './AdminEvents.css';
 import { useEffect, useState } from 'react';
 
-const API_BASE_URL = 'http://127.0.0.1:5000';
+const API_BASE_URL = 'http://127.0.0.1:5050';
 
 export default function AdminEvents() {
 	const [events, setEvents] = useState([]);
@@ -137,7 +137,7 @@ export default function AdminEvents() {
 									<div className="event-main">
 										<div className="event-title">{event.title}</div>
 										<div className="event-meta">
-											{event.date} • {event.location} • {event.category}
+											{event.date} ï¿½ {event.location} ï¿½ {event.category}
 										</div>
 									</div>
 									<div className="event-actions">
@@ -166,7 +166,7 @@ export default function AdminEvents() {
 					<div className="modal-content" onClick={(e) => e.stopPropagation()}>
 						<div className="modal-header">
 							<h2>{editingEvent ? 'Edit Event' : 'Add New Event'}</h2>
-							<button className="close-btn" onClick={closeModal}>×</button>
+							<button className="close-btn" onClick={closeModal}>ï¿½</button>
 						</div>
 						
 						<form onSubmit={handleSubmit}>

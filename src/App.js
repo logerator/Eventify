@@ -8,6 +8,7 @@ import Events from './Pages/Events';
 import LoginOrSignUp from './Pages/LoginOrSignUp'
 import ProfileSettings from './Pages/ProfileSettings';
 import AdminEvents from './Pages/AdminEvents';
+import Connect from './Pages/Connect';
 
 const Layout = () => (
     <>
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
           {
               path: "/events",
               element: <Events />,
+          },
+          {
+              path: "/connect",
+              element: <Connect />,
           },
           {
               path: "/profile_settings",
