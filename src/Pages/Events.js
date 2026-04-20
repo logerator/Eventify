@@ -1,5 +1,7 @@
 import './Events.css';
 import { useEffect, useMemo, useState } from 'react';
+import Toast from '../components/Toast';
+import { useToast } from '../hooks/useToast';
 
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
@@ -8,9 +10,9 @@ function Events() {
 	const [events, setEvents] = useState([]);
 	const [myEvents, setMyEvents] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState('');
 	const [search, setSearch] = useState('');
 	const [category, setCategory] = useState('all');
+	const { toasts, addToast } = useToast();
 
 	const myEventIds = useMemo(() => new Set(myEvents.map((e) => e.id)), [myEvents]);
 
@@ -34,7 +36,6 @@ function Events() {
 
 	const load = async () => {
 		setLoading(true);
-		setError('');
 		try {
 			const [healthRes, eventsRes, myEventsRes] = await Promise.all([
 				fetch(`${API_BASE_URL}/api/health`),
@@ -54,7 +55,7 @@ function Events() {
 			setEvents(Array.isArray(eventsJson.events) ? eventsJson.events : []);
 			setMyEvents(Array.isArray(myEventsJson.events) ? myEventsJson.events : []);
 		} catch (e) {
-			setError(e instanceof Error ? e.message : 'Unknown error');
+			addToast(e instanceof Error ? e.message : 'Unknown error', 'error');
 		} finally {
 			setLoading(false);
 		}
@@ -65,7 +66,6 @@ function Events() {
 	}, []);
 
 	const saveEvent = async (eventId) => {
-		setError('');
 		try {
 			const res = await fetch(`${API_BASE_URL}/api/my-events`, {
 				method: 'POST',
@@ -78,9 +78,10 @@ function Events() {
 				throw new Error(json.error || 'Failed to save event');
 			}
 
+			addToast('Event saved!', 'success');
 			await load();
 		} catch (e) {
-			setError(e instanceof Error ? e.message : 'Unknown error');
+			addToast(e instanceof Error ? e.message : 'Unknown error', 'error');
 		}
 	};
 
@@ -123,8 +124,6 @@ function Events() {
 					<strong>Backend status:</strong> {health.status} <span className="health-time">({health.time})</span>
 				</div>
 			)}
-
-			{error && <div className="error-box">{error}</div>}
 
 			<div className="events-grid">
 				<div className="events-panel">
@@ -171,6 +170,8 @@ function Events() {
 					)}
 				</div>
 			</div>
+
+			<Toast toasts={toasts} />
 		</div>
 	);
 }
