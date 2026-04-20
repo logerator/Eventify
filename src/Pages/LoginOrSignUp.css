@@ -79,6 +79,7 @@ body {
     font-size: 13px;
     border-radius: 8px;
     width: 100%;
+    box-sizing: border-box;
     outline: none;
     color: #333;
     flex-shrink: 0;
@@ -221,4 +222,46 @@ body {
 .toggle-right {
     right: 0;
     transform: translateX(0);
+}
+
+.password-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 8px 0;
+    flex-shrink: 0;
+}
+
+.password-wrapper input {
+    margin: 0;
+    width: 100%;
+    padding-right: 38px;
+    box-sizing: border-box;
+}
+
+.eye-btn,
+.container .eye-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer;
+    color: #999;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: normal;
+    font-size: 0;
+    min-width: 0;
+}
+
+.eye-btn:hover,
+.container .eye-btn:hover {
+    color: #555;
+    background: none !important;
 }

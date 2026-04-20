@@ -39,7 +39,7 @@ export default function AdminEvents() {
 
 	const openAddModal = () => {
 		setEditingEvent(null);
-		setFormData({ title: '', date: '', location: '', category: '' });
+		setFormData({ title: '', date: '', location: '', category: '', imageUrl: '', themeColor: '', description: '' });
 		setShowModal(true);
 	};
 
@@ -49,7 +49,10 @@ export default function AdminEvents() {
 			title: event.title,
 			date: event.date,
 			location: event.location,
-			category: event.category
+			category: event.category,
+			imageUrl: event.imageUrl || '',
+			themeColor: event.themeColor || '',
+			description: event.description || ''
 		});
 		setShowModal(true);
 	};
@@ -57,7 +60,7 @@ export default function AdminEvents() {
 	const closeModal = () => {
 		setShowModal(false);
 		setEditingEvent(null);
-		setFormData({ title: '', date: '', location: '', category: '' });
+		setFormData({ title: '', date: '', location: '', category: '', imageUrl: '', themeColor: '', description: '' });
 	};
 
 	const handleSubmit = async (e) => {
@@ -65,15 +68,19 @@ export default function AdminEvents() {
 		setError('');
 
 		try {
-			const url = editingEvent 
+			const url = editingEvent
 				? `${API_BASE_URL}/api/events/${editingEvent.id}`
 				: `${API_BASE_URL}/api/events`;
-			
+
 			const method = editingEvent ? 'PUT' : 'POST';
+			const token = localStorage.getItem('token');
 
 			const res = await fetch(url, {
 				method,
-				headers: { 'Content-Type': 'application/json' },
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
 				body: JSON.stringify(formData)
 			});
 
@@ -94,8 +101,10 @@ export default function AdminEvents() {
 
 		setError('');
 		try {
+			const token = localStorage.getItem('token');
 			const res = await fetch(`${API_BASE_URL}/api/events/${eventId}`, {
-				method: 'DELETE'
+				method: 'DELETE',
+				headers: { 'Authorization': `Bearer ${token}` }
 			});
 
 			if (!res.ok) {

@@ -11,6 +11,25 @@ import React, { useState } from 'react';
 import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 
+function EyeIcon() {
+	return (
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+			<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+			<circle cx="12" cy="12" r="3"/>
+		</svg>
+	);
+}
+
+function EyeOffIcon() {
+	return (
+		<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+			<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+			<path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+			<line x1="1" y1="1" x2="23" y2="23"/>
+		</svg>
+	);
+}
+
 function LoginOrSignUp() {
 	const [isSignUp, setIsSignUp] = useState(false);
 
@@ -22,6 +41,10 @@ function LoginOrSignUp() {
 	const [signupEmail, setSignupEmail] = useState('');
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
+
+	const [showLoginPassword, setShowLoginPassword] = useState(false);
+	const [showSignupPassword, setShowSignupPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	const { toasts, addToast } = useToast();
 
@@ -156,20 +179,30 @@ function LoginOrSignUp() {
 							value={signupEmail}
 							onChange={(e) => setSignupEmail(e.target.value)}
 						/>
-						<input
-							type="password"
-							placeholder="Password"
-							required
-							value={password}
-							onChange={handlePasswordChange}
-						/>
-						<input
-							type="password"
-							placeholder="Confirm Password"
-							required
-							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
-						/>
+						<div className="password-wrapper">
+							<input
+								type={showSignupPassword ? 'text' : 'password'}
+								placeholder="Password"
+								required
+								value={password}
+								onChange={handlePasswordChange}
+							/>
+							<button type="button" className="eye-btn" onClick={() => setShowSignupPassword(v => !v)}>
+								{showSignupPassword ? <EyeOffIcon /> : <EyeIcon />}
+							</button>
+						</div>
+						<div className="password-wrapper">
+							<input
+								type={showConfirmPassword ? 'text' : 'password'}
+								placeholder="Confirm Password"
+								required
+								value={confirmPassword}
+								onChange={(e) => setConfirmPassword(e.target.value)}
+							/>
+							<button type="button" className="eye-btn" onClick={() => setShowConfirmPassword(v => !v)}>
+								{showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+							</button>
+						</div>
 
 						{error.length > 0 && (
 							<div className="error-messages">
@@ -194,13 +227,18 @@ function LoginOrSignUp() {
 							value={loginEmail}
 							onChange={(e) => setLoginEmail(e.target.value)}
 						/>
-						<input
-							type="password"
-							placeholder="Password"
-							required
-							value={loginPassword}
-							onChange={(e) => setLoginPassword(e.target.value)}
-						/>
+						<div className="password-wrapper">
+							<input
+								type={showLoginPassword ? 'text' : 'password'}
+								placeholder="Password"
+								required
+								value={loginPassword}
+								onChange={(e) => setLoginPassword(e.target.value)}
+							/>
+							<button type="button" className="eye-btn" onClick={() => setShowLoginPassword(v => !v)}>
+								{showLoginPassword ? <EyeOffIcon /> : <EyeIcon />}
+							</button>
+						</div>
 						<a href="#">Forgot Password?</a>
 						<button type="submit">Sign In</button>
 					</form>
