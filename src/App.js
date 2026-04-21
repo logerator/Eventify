@@ -1,6 +1,4 @@
 import React from 'react';
-import './App.css';
-// React Router imports for handling navigation and routing
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 // Import all page components
