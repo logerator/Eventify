@@ -239,7 +239,6 @@ function LoginOrSignUp() {
 								{showLoginPassword ? <EyeOffIcon /> : <EyeIcon />}
 							</button>
 						</div>
-						<a href="#">Forgot Password?</a>
 						<button type="submit">Sign In</button>
 					</form>
 				</div>
