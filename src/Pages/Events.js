@@ -4,7 +4,7 @@ import Toast from '../components/Toast';
 import { useToast } from '../hooks/useToast';
 
 // Base URL for all API calls - points to production backend server
-const API_BASE_URL = 'https://eventify-production-9f2a.up.railway.app';
+const API_BASE_URL = 'https://eventify-production-bbb4.up.railway.app';
 
 function Events() {
 	// State variables for managing component data and UI
