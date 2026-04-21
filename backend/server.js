@@ -115,26 +115,28 @@ async function autoSeedUsersIfNeeded() {
   try {
     conn = await pool.getConnection();
 
+    const userHash = await argon2.hash(demoUserPassword);
     const existingUser = await conn.query("SELECT id FROM users WHERE email = ?", [demoUserEmail]);
     if (existingUser.length === 0) {
-      const hash = await argon2.hash(demoUserPassword);
       await conn.query(
         "INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, 0)",
-        ["Demo User", demoUserEmail, hash]
+        ["Demo User", demoUserEmail, userHash]
       );
       console.log(`Demo user created: ${demoUserEmail}`);
+    } else {
+      await conn.query("UPDATE users SET password_hash = ? WHERE email = ?", [userHash, demoUserEmail]);
     }
 
+    const adminHash = await argon2.hash(demoAdminPassword);
     const existingAdmin = await conn.query("SELECT id FROM users WHERE email = ?", [demoAdminEmail]);
     if (existingAdmin.length === 0) {
-      const hash = await argon2.hash(demoAdminPassword);
       await conn.query(
         "INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, 1)",
-        ["Demo Admin", demoAdminEmail, hash]
+        ["Demo Admin", demoAdminEmail, adminHash]
       );
       console.log(`Demo admin created: ${demoAdminEmail}`);
     } else {
-      await conn.query("UPDATE users SET is_admin = 1 WHERE email = ?", [demoAdminEmail]);
+      await conn.query("UPDATE users SET password_hash = ?, is_admin = 1 WHERE email = ?", [adminHash, demoAdminEmail]);
     }
   } catch (err) {
     console.error("Auto-seed users error:", err);
