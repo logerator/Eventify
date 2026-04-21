@@ -128,7 +128,7 @@ function LoginOrSignUp() {
 
 		try {
 			// Send POST request to signup API endpoint
-			const res = await fetch("https://eventify-production-9f2a.up.railway.app/api/auth/signup", {
+			const res = await fetch("https://eventify-production-bbb4.up.railway.app/api/auth/signup", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
@@ -175,7 +175,7 @@ function LoginOrSignUp() {
 
 		try {
 			// Send POST request to login API endpoint
-			const res = await fetch("https://eventify-production-9f2a.up.railway.app/api/auth/login", {
+			const res = await fetch("https://eventify-production-bbb4.up.railway.app/api/auth/login", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
