@@ -97,7 +97,7 @@ function ProfileSettings() {
 			};
 			
 			// Send PUT request to update profile endpoint
-			const res = await fetch('https://eventify-production-9f2a.up.railway.app/api/user/me', {
+			const res = await fetch('https://eventify-production-bbb4.up.railway.app/api/user/me', {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
