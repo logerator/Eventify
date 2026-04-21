@@ -194,6 +194,11 @@ async function autoSeedEventsIfNeeded() {
   }
 }
 
+const port = Number(process.env.PORT || 5050);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
 (async () => {
   const mariadbModule = await import("mariadb");
   const mariadb = mariadbModule.default ?? mariadbModule;
@@ -603,8 +608,4 @@ app.post("/api/auth/login", async (req, res) => {
     }
   });
 
-  const port = Number(process.env.PORT || 5050);
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
 })();
